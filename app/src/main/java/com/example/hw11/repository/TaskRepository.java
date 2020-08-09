@@ -1,5 +1,6 @@
 package com.example.hw11.repository;
 
+import com.example.hw11.model.State;
 import com.example.hw11.model.Task;
 
 import java.util.ArrayList;
@@ -30,6 +31,14 @@ public class TaskRepository implements RepositoryInterface<Task> {
     public void insertList(List<Task> tasks) {
         sTaskList=new ArrayList<>();
         sTaskList=tasks;
+    }
+
+    public void createListByCount(String name,int count){
+        sTaskList=new ArrayList<>();
+        for (int i=0;i<count;i++){
+//            Task task=;new Task("name", State.values()[i%3]);
+            sTaskList.add(new Task(name, State.values()[i%3]));
+        }
     }
 
     @Override

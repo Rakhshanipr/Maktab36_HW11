@@ -4,8 +4,8 @@ import java.util.UUID;
 
 public class Task {
     private UUID mId;
-private String mTitle;
-private State mState;
+    private String mTitle;
+    private State mState;
 
     public Task() {
 
@@ -38,6 +38,6 @@ private State mState;
     public Task(String title, State state) {
         mTitle = title;
         mState = state;
-        mId=UUID.randomUUID();
+        mId = UUID.randomUUID();
     }
 }

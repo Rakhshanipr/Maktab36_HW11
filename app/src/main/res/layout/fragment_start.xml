@@ -18,12 +18,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
+
             android:text="Name: "></TextView>
 
         <EditText
             android:id="@+id/edittext_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="mohammad"
             android:hint="pleas enter your name    "></EditText>
     </LinearLayout>
 
@@ -43,6 +45,7 @@
             android:id="@+id/edittext_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="12"
             android:hint="pleas enter count of task"></EditText>
     </LinearLayout>
 

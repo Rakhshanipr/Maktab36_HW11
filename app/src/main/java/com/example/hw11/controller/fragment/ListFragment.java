@@ -1,8 +1,11 @@
 package com.example.hw11.controller.fragment;
 
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,6 +34,8 @@ public class ListFragment extends Fragment {
     Button mButtonAddTask;
     RecyclerView mRecyclerView;
     int mCount;
+
+    Color mColor;
     String mName;
     TaskRepository mTaskRepository;
 //endregion
@@ -83,7 +88,7 @@ public class ListFragment extends Fragment {
     private void setInitialization() {
         mName = getArguments().getString(ARG_LISTFRAGMENT_NAME);
         mCount = getArguments().getInt(ARG_LISTFRAGMENT_COUNT);
-        mRecyclerView.setLayoutManager(new GridLayout(getContext(),));
+//        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mTaskRepository.createListByCount(mName, mCount);
         if (mMyAdapter == null) {
             mMyAdapter = new MyAdapter(mTaskRepository.getList());
@@ -112,7 +117,7 @@ public class ListFragment extends Fragment {
         public void setItem(Task task) {
             mTextViewName.setText(task.getTitle());
             mTextViewState.setText(task.getState().toString());
-            if (mColorCount++ % 2 == 0)
+            if (mCount++%2==0)
                 linearLayout.setBackgroundColor(getResources().getColor(R.color.green));
             else
                 linearLayout.setBackgroundColor(getResources().getColor(R.color.red));

@@ -4,27 +4,40 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.hw11.R;
+import com.example.hw11.model.State;
 import com.example.hw11.model.Task;
 import com.example.hw11.repository.TaskRepository;
 
 import java.util.List;
+import java.util.Random;
 
 public class ListFragment extends Fragment {
+    //region initialization
     public int mColorCount = 0;
-
+    MyAdapter mMyAdapter;
+    Button mButtonAddTask;
+    RecyclerView mRecyclerView;
+    int mCount;
+    String mName;
+    TaskRepository mTaskRepository;
+//endregion
+    //region initialization static
     public static final String ARG_LISTFRAGMENT_NAME = "com.example.hw11.controller.fragment.name";
     public static final String ARG_LISTFRAGMENT_COUNT = "com.example.hw11.controller.fragment.count";
-
+// method
     public static ListFragment newInstance(String name, int count) {
 
         Bundle args = new Bundle();
@@ -34,11 +47,7 @@ public class ListFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
-    RecyclerView mRecyclerView;
-    int mCount;
-    String mName;
-    TaskRepository mTaskRepository;
+    //endregion
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,23 +59,41 @@ public class ListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_list, container, false);
         findViews(view);
+        setOnClickListner();
         setInitialization();
         return view;
+    }
+
+    private void setOnClickListner() {
+        mButtonAddTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mTaskRepository.add(new Task(mName, State.values()[new Random().nextInt(3)]));
+                updateRecyclerView();
+            }
+        });
+    }
+
+    private void updateRecyclerView() {
+        mMyAdapter.notifyDataSetChanged();
     }
 
     private void setInitialization() {
         mName = getArguments().getString(ARG_LISTFRAGMENT_NAME);
         mCount = getArguments().getInt(ARG_LISTFRAGMENT_COUNT);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setLayoutManager(new GridLayout(getContext(),));
         mTaskRepository.createListByCount(mName, mCount);
-        mRecyclerView.setAdapter(new MyAdapter(mTaskRepository.getList()));
-
+        if (mMyAdapter == null) {
+            mMyAdapter = new MyAdapter(mTaskRepository.getList());
+        } else
+            mMyAdapter.notifyDataSetChanged();
+        mRecyclerView.setAdapter(mMyAdapter);
     }
 
     private void findViews(View view) {
+        mButtonAddTask = view.findViewById(R.id.button_add_task);
         mRecyclerView = view.findViewById(R.id.recyclerview_fragment_list_task);
     }
 

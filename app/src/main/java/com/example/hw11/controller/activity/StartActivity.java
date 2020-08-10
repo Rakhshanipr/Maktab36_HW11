@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import com.example.hw11.R;
 import com.example.hw11.controller.fragment.StartFragment;
+import com.example.hw11.repository.TaskRepository;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -16,7 +17,6 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         getSupportActionBar().hide(); //hide the title bar
-
         FragmentManager fragmentManager=getSupportFragmentManager();
         Fragment fragment=fragmentManager.findFragmentById(R.id.container_fragment_start);
         if (fragment==null){

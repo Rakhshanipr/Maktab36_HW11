@@ -7,18 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class TaskRepository implements RepositoryInterface<Task> {
+public class TaskRepository implements IRepository<Task> {
 
     private static List<Task> sTaskList;
-    public static TaskRepository mTaskRepository;
-    private TaskRepository(){
+    public static TaskRepository sMITaskRepository;
+
+    private TaskRepository() {
 
     }
 
-    public static TaskRepository getInstance(){
-        if (mTaskRepository==null)
-            mTaskRepository=new TaskRepository();
-        return mTaskRepository;
+    public static TaskRepository getInstance() {
+        if (sMITaskRepository == null)
+            sMITaskRepository = new TaskRepository();
+        return sMITaskRepository;
     }
 
 
@@ -29,21 +30,21 @@ public class TaskRepository implements RepositoryInterface<Task> {
 
     @Override
     public void insertList(List<Task> tasks) {
-        sTaskList=new ArrayList<>();
-        sTaskList=tasks;
+        sTaskList = new ArrayList<>();
+        sTaskList = tasks;
     }
 
-    public void createListByCount(String name,int count){
-        sTaskList=new ArrayList<>();
-        for (int i=0;i<count;i++){
+    public void createListByCount(String name, int count) {
+        sTaskList = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
 //            Task task=;new Task("name", State.values()[i%3]);
-            sTaskList.add(new Task(name, State.values()[i%3]));
+            sTaskList.add(new Task(name, State.values()[i % 3]));
         }
     }
 
     @Override
     public void update(Task e) {
-        Task task1=get(e.getId());
+        Task task1 = get(e.getId());
         task1.setState(e.getState());
         task1.setTitle(e.getTitle());
     }
@@ -55,8 +56,8 @@ public class TaskRepository implements RepositoryInterface<Task> {
 
     @Override
     public void delete(UUID uuid) {
-        for (int i=0;i<sTaskList.size();i++){
-            if (sTaskList.get(i).getId()==uuid){
+        for (int i = 0; i < sTaskList.size(); i++) {
+            if (sTaskList.get(i).getId() == uuid) {
                 sTaskList.remove(i);
                 return;
             }
@@ -65,16 +66,26 @@ public class TaskRepository implements RepositoryInterface<Task> {
 
     @Override
     public Task get(UUID uuid) {
-        for (int i=0;i<sTaskList.size();i++){
-            if (sTaskList.get(i).getId()==uuid){
+        for (int i = 0; i < sTaskList.size(); i++) {
+            if (sTaskList.get(i).getId() == uuid) {
                 return sTaskList.get(i);
             }
         }
-    return null;
+        return null;
     }
 
     @Override
     public List<Task> getList() {
         return sTaskList;
+    }
+
+    public List<Task> getList(State state) {
+        List<Task> list = new ArrayList<>();
+        for (int i=0;i<sTaskList.size();i++){
+            if (sTaskList.get(i).getState().equals(state)) {
+                list.add(sTaskList.get(i));
+            }
+        }
+        return list;
     }
 }

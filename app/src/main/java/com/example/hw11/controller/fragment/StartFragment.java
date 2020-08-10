@@ -13,12 +13,14 @@ import android.widget.EditText;
 
 import com.example.hw11.R;
 import com.example.hw11.controller.activity.ListActivity;
+import com.example.hw11.model.State;
+import com.example.hw11.repository.TaskRepository;
 
 public class StartFragment extends Fragment {
 
     //region initialization
-    Button mStartButton;
-    EditText mEditTextName;
+     Button mStartButton;
+   static EditText mEditTextName;
     EditText mEditTextCount;
 
     //endregion
@@ -48,9 +50,9 @@ public class StartFragment extends Fragment {
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                TaskRepository.getInstance().createListByCount(mEditTextName.getText().toString(),Integer.parseInt(mEditTextCount.getText().toString()));
                 Intent intent = ListActivity.newIntent(getContext()
-                        ,mEditTextName.getText().toString()
-                        ,Integer.parseInt(mEditTextCount.getText().toString()));
+                        , State.Todo);
                 startActivity(intent);
             }
         });

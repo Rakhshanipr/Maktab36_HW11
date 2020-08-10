@@ -3,7 +3,7 @@ package com.example.hw11.repository;
 import java.util.List;
 import java.util.UUID;
 
-public interface RepositoryInterface<E> {
+public interface IRepository<E> {
     void add(E e);
     void insertList(List<E> eList);
     void update(E e);

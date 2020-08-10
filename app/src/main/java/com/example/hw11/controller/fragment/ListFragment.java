@@ -1,21 +1,15 @@
 package com.example.hw11.controller.fragment;
 
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,7 +19,6 @@ import com.example.hw11.model.Task;
 import com.example.hw11.repository.TaskRepository;
 
 import java.util.List;
-import java.util.Random;
 
 public class ListFragment extends Fragment {
     //region initialization
@@ -33,21 +26,18 @@ public class ListFragment extends Fragment {
     MyAdapter mMyAdapter;
     Button mButtonAddTask;
     RecyclerView mRecyclerView;
-    int mCount;
-
-    Color mColor;
-    String mName;
+    State mState;
     TaskRepository mTaskRepository;
-//endregion
+    //endregion
     //region initialization static
-    public static final String ARG_LISTFRAGMENT_NAME = "com.example.hw11.controller.fragment.name";
-    public static final String ARG_LISTFRAGMENT_COUNT = "com.example.hw11.controller.fragment.count";
-// method
-    public static ListFragment newInstance(String name, int count) {
+    public static final String ARG_STATE = "com.example.hw11.controller.fragment.state";
+//    public static final String ARG_NAME = "com.example.hw11.controller.fragment.state";
 
+    // method
+    public static ListFragment newInstance(int intState) {
+        State state = State.values()[intState];
         Bundle args = new Bundle();
-        args.putString(ARG_LISTFRAGMENT_NAME, name);
-        args.putInt(ARG_LISTFRAGMENT_COUNT, count);
+        args.putSerializable(ARG_STATE, state);
         ListFragment fragment = new ListFragment();
         fragment.setArguments(args);
         return fragment;
@@ -58,7 +48,6 @@ public class ListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mTaskRepository = TaskRepository.getInstance();
-
     }
 
     @Override
@@ -75,23 +64,24 @@ public class ListFragment extends Fragment {
         mButtonAddTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mTaskRepository.add(new Task(mName, State.values()[new Random().nextInt(3)]));
+                mTaskRepository.add(new Task(StartFragment.mEditTextName.getText().toString(), mState));
                 updateRecyclerView();
             }
         });
     }
 
     private void updateRecyclerView() {
-        mMyAdapter.notifyDataSetChanged();
+        mMyAdapter = new MyAdapter(mTaskRepository.getList(mState));
+
+        mRecyclerView.setAdapter(mMyAdapter);
     }
 
     private void setInitialization() {
-        mName = getArguments().getString(ARG_LISTFRAGMENT_NAME);
-        mCount = getArguments().getInt(ARG_LISTFRAGMENT_COUNT);
-//        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mTaskRepository.createListByCount(mName, mCount);
+        mState = (State) getArguments().getSerializable(ARG_STATE);
+//      mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         if (mMyAdapter == null) {
-            mMyAdapter = new MyAdapter(mTaskRepository.getList());
+            mMyAdapter = new MyAdapter(mTaskRepository.getList(mState));
         } else
             mMyAdapter.notifyDataSetChanged();
         mRecyclerView.setAdapter(mMyAdapter);
@@ -117,10 +107,7 @@ public class ListFragment extends Fragment {
         public void setItem(Task task) {
             mTextViewName.setText(task.getTitle());
             mTextViewState.setText(task.getState().toString());
-            if (mCount++%2==0)
-                linearLayout.setBackgroundColor(getResources().getColor(R.color.green));
-            else
-                linearLayout.setBackgroundColor(getResources().getColor(R.color.red));
+
 
         }
     }
